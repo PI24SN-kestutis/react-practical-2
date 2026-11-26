@@ -1,9 +1,11 @@
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { fetchRecipes, RECIPES_PER_PAGE } from '../api/recipesApi.js'
+import FavoritesContext from './FavoritesContext.js'
 import RecipeCard from './RecipeCard.jsx'
 import './recipes.css'
 
 function RecipeList() {
+  const { error: favoritesError, actionError } = useContext(FavoritesContext)
   const [page, setPage] = useState(1)
   const [recipes, setRecipes] = useState([])
   const [total, setTotal] = useState(0)
@@ -48,6 +50,9 @@ function RecipeList() {
   return (
     <section>
       <h1>Receptai</h1>
+      {(favoritesError || actionError) && (
+        <p className="form-error">{favoritesError || actionError}</p>
+      )}
       {recipes.map((recipe) => (
         <RecipeCard key={recipe.id} recipe={recipe} />
       ))}

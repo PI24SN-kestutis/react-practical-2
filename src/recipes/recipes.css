@@ -41,6 +41,27 @@
     margin-bottom: 6px;
 }
 
+.recipe-card-badge {
+    margin: 0;
+    color: #b7791f;
+    font-weight: bold;
+}
+
+.favorite-button {
+    padding: 6px 12px;
+    background: #ffffff;
+    color: #0b5ea8;
+    border: 1px solid #0b5ea8;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.favorite-button:disabled {
+    color: #8aa9c6;
+    border-color: #8aa9c6;
+    cursor: not-allowed;
+}
+
 .pagination {
     display: flex;
     align-items: center;
