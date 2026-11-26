@@ -1,24 +1,28 @@
 import { useContext, useEffect, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import AuthContext from '../auth/AuthContext.js'
 import FavoritesContext from './FavoritesContext.js'
 import { addFavorite, fetchFavorites, removeFavorite } from '../api/favoritesApi.js'
 
 // "loaded" remembers which user the list belongs to
 const EMPTY = { userId: null, items: [], error: '' }
+const NO_ACTION_ERROR = { message: '', path: '' }
 
 function FavoritesProvider({ children }) {
   const { user } = useContext(AuthContext)
   const userId = user ? user.id : null
+  const { pathname } = useLocation()
 
   const [loaded, setLoaded] = useState(EMPTY)
   const [pendingRecipeIds, setPendingRecipeIds] = useState([])
-  const [actionError, setActionError] = useState('')
+  // The action error remembers the page where it happened
+  const [actionErrorState, setActionErrorState] = useState(NO_ACTION_ERROR)
 
   // Logout: clear the favorites state (the records on the server stay untouched)
   if (userId === null && loaded.userId !== null) {
     setLoaded(EMPTY)
     setPendingRecipeIds([])
-    setActionError('')
+    setActionErrorState(NO_ACTION_ERROR)
   }
 
   useEffect(() => {
@@ -48,6 +52,17 @@ function FavoritesProvider({ children }) {
   const error = isCurrent ? loaded.error : ''
   const isLoading = userId !== null && !isCurrent
 
+  // Show the action error only on the page where it happened
+  const actionError = actionErrorState.path === pathname ? actionErrorState.message : ''
+
+  function clearActionError() {
+    setActionErrorState(NO_ACTION_ERROR)
+  }
+
+  function showActionError(message) {
+    setActionErrorState({ message, path: pathname })
+  }
+
   function startPending(recipeId) {
     setPendingRecipeIds((ids) => [...ids, recipeId])
   }
@@ -60,7 +75,7 @@ function FavoritesProvider({ children }) {
     const alreadyFavorite = favorites.some((item) => item.recipeId === recipe.id)
     if (userId === null || alreadyFavorite || pendingRecipeIds.includes(recipe.id)) return
 
-    setActionError('')
+    clearActionError()
     startPending(recipe.id)
     try {
       const created = await addFavorite({
@@ -74,7 +89,7 @@ function FavoritesProvider({ children }) {
         prev.userId === userId ? { ...prev, items: [...prev.items, created] } : prev,
       )
     } catch (err) {
-      setActionError(err.message)
+      showActionError(err.message)
     } finally {
       finishPending(recipe.id)
     }
@@ -85,7 +100,7 @@ function FavoritesProvider({ children }) {
     const item = favorites.find((fav) => fav.id === favoriteId)
     if (userId === null || !item || pendingRecipeIds.includes(item.recipeId)) return
 
-    setActionError('')
+    clearActionError()
     startPending(item.recipeId)
     try {
       await removeFavorite(favoriteId)
@@ -95,7 +110,7 @@ function FavoritesProvider({ children }) {
           : prev,
       )
     } catch (err) {
-      setActionError(err.message)
+      showActionError(err.message)
     } finally {
       finishPending(item.recipeId)
     }
