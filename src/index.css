@@ -42,6 +42,23 @@ button {
     gap: 16px;
 }
 
+.navbar-links {
+    align-items: center;
+}
+
 .navbar-links a.active {
     text-decoration: underline;
+}
+
+.navbar-user {
+    color: #ffffff;
+}
+
+.navbar-button {
+    padding: 6px 12px;
+    background: transparent;
+    color: #ffffff;
+    border: 1px solid #ffffff;
+    border-radius: 4px;
+    cursor: pointer;
 }
