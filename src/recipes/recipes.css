@@ -28,8 +28,10 @@
 }
 
 .recipe-detail-image {
+    display: block;
     max-width: 100%;
     width: 400px;
+    height: auto;
     border-radius: 8px;
 }
 
@@ -87,4 +89,19 @@
 .recipe-card-cuisine {
     margin: 0;
     color: #5c6773;
+}
+
+@media (max-width: 520px) {
+    .recipe-card {
+        flex-direction: column;
+    }
+
+    .recipe-card-image {
+        width: 100%;
+        height: 200px;
+    }
+
+    .pagination {
+        flex-wrap: wrap;
+    }
 }

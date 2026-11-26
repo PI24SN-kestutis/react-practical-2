@@ -17,6 +17,19 @@ button {
     font-family: inherit;
 }
 
+h1,
+h2 {
+    color: #0b5ea8;
+}
+
+a {
+    color: #0b5ea8;
+}
+
+button:not(:disabled):hover {
+    filter: brightness(0.92);
+}
+
 .page {
     max-width: 960px;
     margin: 0 auto;
@@ -25,8 +38,10 @@ button {
 
 .navbar {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
+    gap: 8px;
     padding: 12px 24px;
     background: #0b5ea8;
 }
@@ -39,11 +54,9 @@ button {
 
 .navbar-links {
     display: flex;
-    gap: 16px;
-}
-
-.navbar-links {
+    flex-wrap: wrap;
     align-items: center;
+    gap: 16px;
 }
 
 .navbar-links a.active {
