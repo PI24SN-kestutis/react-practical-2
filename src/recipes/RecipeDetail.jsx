@@ -8,6 +8,7 @@ function RecipeDetail() {
   const { id } = useParams()
   const [recipe, setRecipe] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState('')
 
   useEffect(() => {
     // Ignore the response if the id changed or the component was removed meanwhile
@@ -19,8 +20,9 @@ function RecipeDetail() {
         setRecipe(data)
         setIsLoading(false)
       })
-      .catch(() => {
+      .catch((err) => {
         if (ignore) return
+        setError(err.message)
         setIsLoading(false)
       })
 
@@ -31,8 +33,25 @@ function RecipeDetail() {
 
   if (isLoading) return <p>Kraunama...</p>
 
-  // Temporary: errors and "recipe not found" messages are added in the next step
-  if (!recipe) return null
+  if (error) {
+    return (
+      <section>
+        <p className="form-error">{error}</p>
+        <Link to="/dashboard">← Atgal į receptus</Link>
+      </section>
+    )
+  }
+
+  // fetchRecipe returns null when the API answers 404
+  if (!recipe) {
+    return (
+      <section>
+        <h1>Receptas nerastas</h1>
+        <p>Recepto, kurio nr. {id}, nėra.</p>
+        <Link to="/dashboard">← Atgal į receptus</Link>
+      </section>
+    )
+  }
 
   return (
     <article className="recipe-detail">
