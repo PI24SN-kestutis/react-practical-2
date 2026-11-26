@@ -64,7 +64,7 @@ Visi duomenys saugomi faile [db.json](db.json). Serveriui veikiant, POST ir DELE
 
 `userId` imamas iš autentifikacijos konteksto, o ne iš DummyJSON recepto lauko `userId`, nes jis nurodo recepto autorių.
 
-Ši kolekcija bus naudojama įgyvendinant B dalį.
+Ši kolekcija naudojama B dalyje. Pridedant įrašą išsaugomi `userId`, `recipeId`, `name` ir `image`, o šalinant naudojamas įrašo `id`.
 
 ## Naudojami adresai
 
@@ -76,7 +76,7 @@ Visi duomenys saugomi faile [db.json](db.json). Serveriui veikiant, POST ir DELE
 | Pridėti mėgstamiausią | `POST /favorites` |
 | Pašalinti mėgstamiausią | `DELETE /favorites/{id}` (pagal įrašo `id`, ne `recipeId`) |
 
-Pirmi du adresai jau naudojami A dalyje. Kiti bus naudojami B dalyje.
+Pirmi du adresai naudojami A dalyje, kiti trys – B dalyje. Visos užklausos aprašytos failuose `src/api/authApi.js` ir `src/api/favoritesApi.js`.
 
 ## Kaip veikia registracija ir prisijungimas
 

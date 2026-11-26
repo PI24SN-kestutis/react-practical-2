@@ -22,7 +22,7 @@ Naudojami funkciniai komponentai, `useState`, `useEffect`, `createContext` ir `u
 | Dalis | Pavadinimas | Būsena |
 |---|---|---|
 | A | Autentifikacijos sistema su apsaugotais maršrutais | Įgyvendinta |
-| B | Receptų programėlė su mėgstamiausių receptų išsaugojimu | Vykdoma |
+| B | Receptų programėlė su mėgstamiausių receptų išsaugojimu | Įgyvendinta |
 
 ### A dalis – Autentifikacijos sistema
 
@@ -38,15 +38,15 @@ Naudojami funkciniai komponentai, `useState`, `useEffect`, `createContext` ir `u
 
 ### B dalis – Receptų programėlė
 
-Planuojama:
+- Receptų sąrašas iš DummyJSON su puslapiavimu po 5 receptus. Puslapių skaičius apskaičiuojamas pagal API grąžintą `total`, o „Atgal" ir „Kitas" mygtukai išjungiami pirmame ir paskutiniame puslapyje.
+- Recepto kortelė rodo pavadinimą, nuotrauką, virtuvės tipą, nuorodą į peržiūrą ir mėgstamiausio recepto mygtuką.
+- Išsami recepto peržiūra (`/recipe/:id`): ingredientai, gaminimo žingsniai, paruošimo ir gaminimo trukmė, porcijų skaičius. Veikia ir tiesiogiai atvėrus adresą. Neegzistuojančiam receptui rodomas pranešimas „Receptas nerastas".
+- Mėgstamiausių pridėjimas (POST) ir šalinimas (DELETE pagal įrašo `id`). Receptas to paties naudotojo sąraše nesikartoja, o žymė išlieka pereinant tarp puslapių ir perkrovus puslapį.
+- Puslapyje `/favorites` rodomi tik prisijungusio naudotojo įrašai. Tuščiam sąrašui rodoma „Mėgstamiausių receptų dar nėra."
+- Įkėlimo būsenos, klaidų pranešimai ir apsauga nuo pakartotinio to paties veiksmo siuntimo. Sustabdžius serverį, sąsaja neteigia, kad pakeitimas pavyko.
+- Atsijungus išvaloma mėgstamiausių būsena naršyklėje, o serveryje įrašai lieka. Vėl prisijungus, sąrašas atkuriamas.
 
-- Receptų sąrašas iš DummyJSON su puslapiavimu po 5 receptus.
-- Išsami recepto peržiūra.
-- Mėgstamiausių receptų pridėjimas ir šalinimas, išsaugomas serveryje kiekvienam naudotojui atskirai.
-
-**Komponentai:** `RecipeList`, `RecipeCard`, `RecipeDetail`, `Favorites`.
-
-Ši dalis dar kuriama, todėl šis aprašas bus papildytas.
+**Komponentai:** `RecipeList`, `RecipeCard`, `RecipeDetail`, `Favorites`, `FavoritesProvider`.
 
 ## Maršrutai
 
@@ -68,7 +68,9 @@ react-practical-2/
 ├── public/
 ├── src/
 │   ├── api/
-│   │   └── authApi.js
+│   │   ├── authApi.js
+│   │   ├── recipesApi.js
+│   │   └── favoritesApi.js
 │   ├── auth/
 │   │   ├── AuthContext.js
 │   │   ├── AuthProvider.jsx
@@ -81,9 +83,13 @@ react-practical-2/
 │   │   ├── Home.jsx
 │   │   └── NotFound.jsx
 │   ├── recipes/
+│   │   ├── FavoritesContext.js
+│   │   ├── FavoritesProvider.jsx
 │   │   ├── RecipeList.jsx
+│   │   ├── RecipeCard.jsx
 │   │   ├── RecipeDetail.jsx
-│   │   └── Favorites.jsx
+│   │   ├── Favorites.jsx
+│   │   └── recipes.css
 │   ├── App.jsx
 │   ├── index.css
 │   └── main.jsx
@@ -140,6 +146,7 @@ npm run build
 
 - Vienas komponentas – vienas failas.
 - Bendra naudotojo būsena laikoma `AuthContext`, kurią komponentai pasiekia per `useContext`.
+- Mėgstamiausi receptai laikomi `FavoritesContext`, kuris priklauso nuo prisijungusio naudotojo. Pridėjimas ir šalinimas keičia sąrašą tik gavus sėkmingą serverio atsakymą.
 - `isAuthenticated` apskaičiuojamas pagal `user`, o ne saugomas atskirai.
 - HTTP užklausos išskirtos į `src/api/`. Naudojant `fetch`, visada tikrinamas `response.ok`.
 - Būsena atnaujinama nekeičiant esamų objektų ir masyvų tiesiogiai.
