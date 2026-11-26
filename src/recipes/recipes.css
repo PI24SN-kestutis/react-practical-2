@@ -27,6 +27,20 @@
     font-size: 1.2rem;
 }
 
+.recipe-detail-image {
+    max-width: 100%;
+    width: 400px;
+    border-radius: 8px;
+}
+
+.recipe-detail-info {
+    padding-left: 20px;
+}
+
+.recipe-detail li {
+    margin-bottom: 6px;
+}
+
 .pagination {
     display: flex;
     align-items: center;
