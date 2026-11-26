@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
-import { fetchRecipes } from '../api/recipesApi.js'
+import { fetchRecipes, RECIPES_PER_PAGE } from '../api/recipesApi.js'
 import RecipeCard from './RecipeCard.jsx'
 import './recipes.css'
 
 function RecipeList() {
-  const [page] = useState(1)
+  const [page, setPage] = useState(1)
   const [recipes, setRecipes] = useState([])
+  const [total, setTotal] = useState(0)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState('')
 
@@ -17,6 +18,7 @@ function RecipeList() {
       .then((data) => {
         if (ignore) return
         setRecipes(data.recipes)
+        setTotal(data.total)
         setError('')
         setIsLoading(false)
       })
@@ -31,8 +33,17 @@ function RecipeList() {
     }
   }, [page])
 
+  // Changing the page also switches on the loading state (done here, not inside the effect)
+  function goToPage(newPage) {
+    setIsLoading(true)
+    setPage(newPage)
+  }
+
   if (isLoading) return <p>Kraunama...</p>
   if (error) return <p className="form-error">{error}</p>
+
+  // Calculated from the total returned by the API, not stored in state
+  const totalPages = Math.ceil(total / RECIPES_PER_PAGE)
 
   return (
     <section>
@@ -40,6 +51,18 @@ function RecipeList() {
       {recipes.map((recipe) => (
         <RecipeCard key={recipe.id} recipe={recipe} />
       ))}
+
+      <div className="pagination">
+        <button type="button" onClick={() => goToPage(page - 1)} disabled={page <= 1}>
+          Atgal
+        </button>
+        <span>
+          Puslapis {page} iš {totalPages}
+        </span>
+        <button type="button" onClick={() => goToPage(page + 1)} disabled={page >= totalPages}>
+          Kitas
+        </button>
+      </div>
     </section>
   )
 }

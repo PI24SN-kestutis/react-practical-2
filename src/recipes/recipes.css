@@ -27,6 +27,28 @@
     font-size: 1.2rem;
 }
 
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 24px;
+}
+
+.pagination button {
+    padding: 8px 16px;
+    background: #0b5ea8;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.pagination button:disabled {
+    background: #8aa9c6;
+    cursor: not-allowed;
+}
+
 .recipe-card-cuisine {
     margin: 0;
     color: #5c6773;
